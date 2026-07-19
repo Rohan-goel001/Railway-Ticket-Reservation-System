@@ -173,8 +173,13 @@ void initializeTrains(void) {
  * Returns: Array index (0 to MAX_TRAINS-1) if found, or -1 if not found.
  */
 int findTrainIndex(int trainNum) {
-    // Stub implementation
-    return -1;
+    int i;
+    for (i = 0; i < MAX_TRAINS; i++) {
+        if (trains[i].trainNumber == trainNum) {
+            return i; // Return the matching index (0 to 4)
+        }
+    }
+    return -1; // Return -1 if not found
 }
 
 /*
@@ -211,8 +216,107 @@ void displayTrains(void) {
  * Books a ticket and adds it to the database array.
  */
 void bookTicket(void) {
-    // Stub implementation
-    printf("\n--- Book Ticket (Stub: Feature Coming Soon) ---\n");
+    int trainNum;
+    int trainIndex;
+    size_t len;
+
+    // 1. Check if the tickets database capacity has been reached
+    if (totalTicketsCount >= MAX_TICKETS) {
+        printf("\nSystem Error: Maximum booking capacity of %d tickets has been reached!\n", MAX_TICKETS);
+        return;
+    }
+
+    // 2. Display all available trains
+    printf("\n--- Available Trains ---\n");
+    displayTrains();
+
+    // 3. Ask the user for the Train Number
+    printf("Enter Train Number: ");
+    if (scanf("%d", &trainNum) != 1) {
+        // Clear input buffer on invalid input
+        while (getchar() != '\n');
+        printf("Invalid Input!\n");
+        return;
+    }
+    // Consume the leftover newline from scanf buffer
+    while (getchar() != '\n');
+
+    // 4. Validate the Train Number
+    trainIndex = findTrainIndex(trainNum);
+    if (trainIndex == -1) {
+        printf("Invalid Train Number!\n");
+        return;
+    }
+
+    // 5. Check Seat Availability
+    if (trains[trainIndex].availableSeats == 0) {
+        printf("Sorry! No seats available.\n");
+        return;
+    }
+
+    // 6. Gather passenger details
+    // Read Passenger Name (allows spaces)
+    printf("Enter Passenger Name: ");
+    fgets(tickets[totalTicketsCount].passengerName, sizeof(tickets[totalTicketsCount].passengerName), stdin);
+    // Remove the trailing newline character
+    len = strlen(tickets[totalTicketsCount].passengerName);
+    if (len > 0 && tickets[totalTicketsCount].passengerName[len - 1] == '\n') {
+        tickets[totalTicketsCount].passengerName[len - 1] = '\0';
+    }
+
+    // Read Passenger Age
+    printf("Enter Passenger Age: ");
+    if (scanf("%d", &tickets[totalTicketsCount].passengerAge) != 1) {
+        while (getchar() != '\n');
+        printf("Invalid Age Input!\n");
+        return;
+    }
+    // Consume leftover newline
+    while (getchar() != '\n');
+
+    // Read Passenger Gender ('M', 'F', or 'O')
+    printf("Enter Passenger Gender (M/F/O): ");
+    if (scanf("%c", &tickets[totalTicketsCount].passengerGender) != 1) {
+        while (getchar() != '\n');
+        printf("Invalid Gender Input!\n");
+        return;
+    }
+    // Consume leftover newline
+    while (getchar() != '\n');
+
+    // Read Travel Date (DD/MM/YYYY)
+    printf("Enter Travel Date (DD/MM/YYYY): ");
+    fgets(tickets[totalTicketsCount].travelDate, sizeof(tickets[totalTicketsCount].travelDate), stdin);
+    // Remove the trailing newline character
+    len = strlen(tickets[totalTicketsCount].travelDate);
+    if (len > 0 && tickets[totalTicketsCount].travelDate[len - 1] == '\n') {
+        tickets[totalTicketsCount].travelDate[len - 1] = '\0';
+    }
+
+    // 7. Store ticket information in the tickets array
+    tickets[totalTicketsCount].ticketNumber = nextTicketNumber;
+    tickets[totalTicketsCount].trainNumber = trainNum;
+    
+    // Assign seat number sequentially (e.g., first seat is 1, next is 2...)
+    tickets[totalTicketsCount].seatNumber = trains[trainIndex].totalSeats - trains[trainIndex].availableSeats + 1;
+    strcpy(tickets[totalTicketsCount].status, "Confirmed");
+
+    // 8. Decrease available seats of the selected train
+    trains[trainIndex].availableSeats--;
+
+    // 9. Increment the global ticket number and ticket count
+    nextTicketNumber++;
+    totalTicketsCount++;
+
+    // 10. Display a booking confirmation
+    printf("\n----------------------------------------\n");
+    printf("Booking Successful!\n");
+    printf("Ticket Number : %d\n", tickets[totalTicketsCount - 1].ticketNumber);
+    printf("Passenger Name: %s\n", tickets[totalTicketsCount - 1].passengerName);
+    printf("Train         : %s\n", trains[trainIndex].trainName);
+    printf("Travel Date   : %s\n", tickets[totalTicketsCount - 1].travelDate);
+    printf("Remaining Seats: %d\n", trains[trainIndex].availableSeats);
+    printf("----------------------------------------\n");
 }
 
 /*
