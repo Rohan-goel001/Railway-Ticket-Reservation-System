@@ -60,18 +60,18 @@ int main(void) {
     displayTrains("");
 
     do {
-        printf("\n=============================================\n");
-        printf("    RAILWAY TICKET RESERVATION SYSTEM\n");
-        printf("=============================================\n");
-        printf("1. Book Ticket\n");
-        printf("2. Search Ticket\n");
-        printf("3. Display All Tickets\n");
-        printf("4. Update Ticket\n");
-        printf("5. Cancel Ticket\n");
-        printf("6. Save Data\n");
-        printf("7. Load Data\n");
-        printf("8. Exit\n");
-        printf("---------------------------------------------\n");
+        printf("\n=====================================================\n");
+        printf("          RAILWAY TICKET RESERVATION SYSTEM\n");
+        printf("=====================================================\n");
+        printf("  1. Book Ticket\n");
+        printf("  2. Search Ticket\n");
+        printf("  3. Display All Tickets\n");
+        printf("  4. Update Ticket\n");
+        printf("  5. Cancel Ticket\n");
+        printf("  6. Save Data\n");
+        printf("  7. Load Data\n");
+        printf("  8. Exit\n");
+        printf("=====================================================\n");
         printf("Enter your choice (1-8): ");
         
         // Read choice
@@ -107,9 +107,8 @@ int main(void) {
                 loadData();
                 break;
             case 8:
-                // Auto-save data before exiting
                 saveData();
-                printf("\nSaving data and exiting. Thank you for using the system!\n");
+                printf("Thank you for using Railway Ticket Reservation System!\n");
                 break;
             default:
                 printf("\nInvalid choice! Please choose between 1 and 8.\n");
@@ -230,14 +229,14 @@ int findTicketIndex(int ticketNum) {
  */
 void displayTrains(char travelDate[]) {
     int i;
-    printf("\n------------------------------------------------------------------------------------------\n");
-    printf("%-8s | %-24s | %-11s | %-11s | %-11s | %s\n", 
-           "Train No", "Train Name", "Source", "Destination", "Total Seats", "Available");
-    printf("------------------------------------------------------------------------------------------\n");
+    printf("\n========================================================================================================================\n");
+    printf("%-11s%-30s%-19s%-20s%-16s%s\n", 
+           "Train No", "Train Name", "Source", "Destination", "Total Seats", "Available Seats");
+    printf("========================================================================================================================\n");
     for (i = 0; i < MAX_TRAINS; i++) {
         // Calculate date-wise available seats dynamically
         int availSeats = getAvailableSeats(trains[i].trainNumber, travelDate);
-        printf("%-8d | %-24s | %-11s | %-11s | %-11d | %d\n", 
+        printf("%-11d%-30s%-19s%-20s%-16d%d\n", 
                trains[i].trainNumber, 
                trains[i].trainName, 
                trains[i].source, 
@@ -245,7 +244,7 @@ void displayTrains(char travelDate[]) {
                trains[i].totalSeats, 
                availSeats);
     }
-    printf("------------------------------------------------------------------------------------------\n");
+    printf("========================================================================================================================\n");
 }
 
 /*
@@ -345,15 +344,16 @@ void bookTicket(void) {
     totalTicketsCount++;
 
     // 10. Display a booking confirmation
-    printf("\n----------------------------------------\n");
-    printf("Booking Successful!\n");
-    printf("Ticket Number : %d\n", tickets[totalTicketsCount - 1].ticketNumber);
-    printf("Passenger Name: %s\n", tickets[totalTicketsCount - 1].passengerName);
-    printf("Train         : %s\n", trains[trainIndex].trainName);
-    printf("Travel Date   : %s\n", tickets[totalTicketsCount - 1].travelDate);
-    printf("Seat Number   : %d\n", tickets[totalTicketsCount - 1].seatNumber);
-    printf("Remaining Seats: %d\n", getAvailableSeats(trainNum, travelDate));
-    printf("----------------------------------------\n");
+    printf("\n=====================================================\n");
+    printf("          BOOKING SUCCESSFUL\n");
+    printf("=====================================================\n\n");
+    printf("Ticket Number : %d\n\n", tickets[totalTicketsCount - 1].ticketNumber);
+    printf("Passenger     : %s\n\n", tickets[totalTicketsCount - 1].passengerName);
+    printf("Train         : %s\n\n", trains[trainIndex].trainName);
+    printf("Travel Date   : %s\n\n", tickets[totalTicketsCount - 1].travelDate);
+    printf("Seat Number   : %d\n\n", tickets[totalTicketsCount - 1].seatNumber);
+    printf("Remaining     : %d\n\n", getAvailableSeats(trainNum, travelDate));
+    printf("=====================================================\n");
 }
 
 /*
@@ -384,55 +384,408 @@ void searchTicket(void) {
     // Find the corresponding train name
     trainIndex = findTrainIndex(tickets[ticketIndex].trainNumber);
 
-    printf("\n----------------------------------------\n");
-    printf("Ticket Number : %d\n", tickets[ticketIndex].ticketNumber);
-    printf("Passenger Name: %s\n", tickets[ticketIndex].passengerName);
-    printf("Age           : %d\n", tickets[ticketIndex].passengerAge);
-    printf("Gender        : %c\n", tickets[ticketIndex].passengerGender);
-    printf("Train Number  : %d\n", tickets[ticketIndex].trainNumber);
-    printf("Train Name    : %s\n", (trainIndex != -1) ? trains[trainIndex].trainName : "Unknown");
-    printf("Travel Date   : %s\n", tickets[ticketIndex].travelDate);
-    printf("Seat Number   : %d\n", tickets[ticketIndex].seatNumber);
-    printf("Status        : %s\n", tickets[ticketIndex].status);
-    printf("----------------------------------------\n");
+    printf("\n=====================================================\n");
+    printf("            TICKET DETAILS\n");
+    printf("=====================================================\n\n");
+    printf("Ticket Number : %d\n\n", tickets[ticketIndex].ticketNumber);
+    printf("Passenger     : %s\n\n", tickets[ticketIndex].passengerName);
+    printf("Age           : %d\n\n", tickets[ticketIndex].passengerAge);
+    printf("Gender        : %c\n\n", tickets[ticketIndex].passengerGender);
+    printf("Train Number  : %d\n\n", tickets[ticketIndex].trainNumber);
+    printf("Train Name    : %s\n\n", (trainIndex != -1) ? trains[trainIndex].trainName : "Unknown");
+    printf("Travel Date   : %s\n\n", tickets[ticketIndex].travelDate);
+    printf("Seat Number   : %d\n\n", tickets[ticketIndex].seatNumber);
+    printf("Status        : %s\n\n", tickets[ticketIndex].status);
+    printf("=====================================================\n");
 }
 
 /*
  * Displays details of all booked tickets.
  */
 void displayAllTickets(void) {
-    // Stub implementation
-    printf("\n--- All Tickets List (Stub: Feature Coming Soon) ---\n");
+    int i, j;
+    struct Ticket tempTickets[MAX_TICKETS];
+
+    if (totalTicketsCount == 0) {
+        printf("No tickets booked yet.\n");
+        return;
+    }
+
+    // Copy to temporary array to avoid modifying original tickets array
+    for (i = 0; i < totalTicketsCount; i++) {
+        tempTickets[i] = tickets[i];
+    }
+
+    // Simple Bubble Sort by: 1. Date, 2. Train Number, 3. Seat Number
+    for (i = 0; i < totalTicketsCount - 1; i++) {
+        for (j = 0; j < totalTicketsCount - i - 1; j++) {
+            int swapNeeded = 0;
+            int dateCmp = strcmp(tempTickets[j].travelDate, tempTickets[j + 1].travelDate);
+            
+            if (dateCmp > 0) {
+                swapNeeded = 1;
+            } else if (dateCmp == 0) {
+                if (tempTickets[j].trainNumber > tempTickets[j + 1].trainNumber) {
+                    swapNeeded = 1;
+                } else if (tempTickets[j].trainNumber == tempTickets[j + 1].trainNumber) {
+                    if (tempTickets[j].seatNumber > tempTickets[j + 1].seatNumber) {
+                        swapNeeded = 1;
+                    }
+                }
+            }
+
+            if (swapNeeded) {
+                struct Ticket temp = tempTickets[j];
+                tempTickets[j] = tempTickets[j + 1];
+                tempTickets[j + 1] = temp;
+            }
+        }
+    }
+
+    // Display sorted list in a clean table format
+    printf("\n========================================================================================================================\n");
+    printf("%-11s%-22s%-30s%-15s%-8s%-12s\n", "Ticket No", "Passenger Name", "Train Name", "Date", "Seat", "Status");
+    printf("========================================================================================================================\n");
+    for (i = 0; i < totalTicketsCount; i++) {
+        int trainIndex = findTrainIndex(tempTickets[i].trainNumber);
+        char *trainName = (trainIndex != -1) ? trains[trainIndex].trainName : "Unknown";
+        printf("%-11d%-22s%-30s%-15s%-8d%-12s\n", 
+               tempTickets[i].ticketNumber, 
+               tempTickets[i].passengerName, 
+               trainName, 
+               tempTickets[i].travelDate, 
+               tempTickets[i].seatNumber, 
+               tempTickets[i].status);
+    }
+    printf("========================================================================================================================\n");
+    printf("Total Tickets : %d\n", totalTicketsCount);
+    printf("========================================================================================================================\n");
 }
 
 /*
  * Updates passenger name and age of a specific ticket.
  */
 void updateTicket(void) {
-    // Stub implementation
-    printf("\n--- Update Ticket (Stub: Feature Coming Soon) ---\n");
+    int ticketNum;
+    int ticketIndex;
+    int choice;
+    size_t len;
+    
+    printf("\nEnter Ticket Number to update: ");
+    if (scanf("%d", &ticketNum) != 1) {
+        // Clear input buffer on invalid input
+        while (getchar() != '\n');
+        printf("Invalid input!\n");
+        return;
+    }
+    // Consume leftover newline
+    while (getchar() != '\n');
+
+    // Check if ticket number exists
+    ticketIndex = findTicketIndex(ticketNum);
+    if (ticketIndex == -1) {
+        printf("Ticket not found!\n");
+        return;
+    }
+
+    // Display update submenu
+    printf("\n=====================================================\n");
+    printf("                 UPDATE TICKET MENU\n");
+    printf("=====================================================\n");
+    printf("  1. Update Passenger Name\n");
+    printf("  2. Update Age\n");
+    printf("  3. Update Gender\n");
+    printf("  4. Update Travel Date\n");
+    printf("  5. Update Train\n");
+    printf("  6. Update Everything\n");
+    printf("  7. Cancel\n");
+    printf("=====================================================\n");
+    printf("Enter choice (1-7): ");
+    
+    if (scanf("%d", &choice) != 1) {
+        while (getchar() != '\n');
+        printf("Invalid choice!\n");
+        return;
+    }
+    while (getchar() != '\n'); // clear buffer
+
+    if (choice == 7) {
+        printf("Update cancelled.\n");
+        return;
+    }
+
+    if (choice < 1 || choice > 6) {
+        printf("Invalid choice!\n");
+        return;
+    }
+
+    // Temporary variables to store details
+    char newName[50];
+    strcpy(newName, tickets[ticketIndex].passengerName);
+    
+    int newAge = tickets[ticketIndex].passengerAge;
+    char newGender = tickets[ticketIndex].passengerGender;
+    
+    char newTravelDate[15];
+    strcpy(newTravelDate, tickets[ticketIndex].travelDate);
+    
+    int newTrainNum = tickets[ticketIndex].trainNumber;
+
+    int updateName = (choice == 1 || choice == 6);
+    int updateAge = (choice == 2 || choice == 6);
+    int updateGender = (choice == 3 || choice == 6);
+    int updateDate = (choice == 4 || choice == 6);
+    int updateTrain = (choice == 5 || choice == 6);
+
+    // 1. Update Name
+    if (updateName) {
+        printf("Enter New Passenger Name: ");
+        fgets(newName, sizeof(newName), stdin);
+        len = strlen(newName);
+        if (len > 0 && newName[len - 1] == '\n') {
+            newName[len - 1] = '\0';
+        }
+        if (strlen(newName) == 0) {
+            printf("Passenger name cannot be empty!\n");
+            return;
+        }
+    }
+
+    // 2. Update Age
+    if (updateAge) {
+        printf("Enter New Passenger Age (1-120): ");
+        if (scanf("%d", &newAge) != 1) {
+            while (getchar() != '\n');
+            printf("Invalid Age Input!\n");
+            return;
+        }
+        while (getchar() != '\n');
+        if (newAge < 1 || newAge > 120) {
+            printf("Age must be between 1 and 120!\n");
+            return;
+        }
+    }
+
+    // 3. Update Gender
+    if (updateGender) {
+        printf("Enter New Passenger Gender (M/F/O): ");
+        if (scanf("%c", &newGender) != 1) {
+            while (getchar() != '\n');
+            printf("Invalid Gender Input!\n");
+            return;
+        }
+        while (getchar() != '\n');
+        if (newGender == 'm') newGender = 'M';
+        if (newGender == 'f') newGender = 'F';
+        if (newGender == 'o') newGender = 'O';
+        if (newGender != 'M' && newGender != 'F' && newGender != 'O') {
+            printf("Gender must be M, F, or O!\n");
+            return;
+        }
+    }
+
+    // 4. Update Travel Date
+    if (updateDate) {
+        printf("Enter New Travel Date (DD/MM/YYYY): ");
+        fgets(newTravelDate, sizeof(newTravelDate), stdin);
+        len = strlen(newTravelDate);
+        if (len > 0 && newTravelDate[len - 1] == '\n') {
+            newTravelDate[len - 1] = '\0';
+        }
+        if (strlen(newTravelDate) == 0) {
+            printf("Travel date cannot be empty!\n");
+            return;
+        }
+    }
+
+    // 5. Update Train
+    if (updateTrain) {
+        printf("Enter New Train Number: ");
+        if (scanf("%d", &newTrainNum) != 1) {
+            while (getchar() != '\n');
+            printf("Invalid Train Number Input!\n");
+            return;
+        }
+        while (getchar() != '\n');
+        if (findTrainIndex(newTrainNum) == -1) {
+            printf("Invalid Train Number!\n");
+            return;
+        }
+    }
+
+    // If train number or travel date changes, recalculate seat number date-wise
+    int oldTrainNum = tickets[ticketIndex].trainNumber;
+    char oldTravelDate[15];
+    strcpy(oldTravelDate, tickets[ticketIndex].travelDate);
+
+    if (newTrainNum != oldTrainNum || strcmp(newTravelDate, oldTravelDate) != 0) {
+        int newTrainIndex = findTrainIndex(newTrainNum);
+        
+        // Temporarily set status to "Cancelled" so getAvailableSeats doesn't count this ticket
+        strcpy(tickets[ticketIndex].status, "Cancelled");
+        int newAvail = getAvailableSeats(newTrainNum, newTravelDate);
+        strcpy(tickets[ticketIndex].status, "Confirmed"); // restore original status
+
+        if (newAvail <= 0) {
+            printf("Sorry! No seats available on the selected train/date. Update cancelled.\n");
+            return;
+        }
+
+        // Apply route updates and set new seat number
+        tickets[ticketIndex].trainNumber = newTrainNum;
+        strcpy(tickets[ticketIndex].travelDate, newTravelDate);
+        tickets[ticketIndex].seatNumber = trains[newTrainIndex].totalSeats - newAvail + 1;
+    }
+
+    // Apply passenger details updates
+    strcpy(tickets[ticketIndex].passengerName, newName);
+    tickets[ticketIndex].passengerAge = newAge;
+    tickets[ticketIndex].passengerGender = newGender;
+
+    printf("Ticket Updated Successfully.\n");
 }
 
 /*
  * Cancels a ticket by changing its status to "Cancelled".
  */
 void cancelTicket(void) {
-    // Stub implementation
-    printf("\n--- Cancel Ticket (Stub: Feature Coming Soon) ---\n");
+    int ticketNum;
+    int ticketIndex;
+    char confirm;
+    int i;
+
+    printf("\nEnter Ticket Number to cancel: ");
+    if (scanf("%d", &ticketNum) != 1) {
+        // Clear input buffer on invalid input
+        while (getchar() != '\n');
+        printf("Invalid input!\n");
+        return;
+    }
+    // Consume leftover newline
+    while (getchar() != '\n');
+
+    // Check if ticket exists
+    ticketIndex = findTicketIndex(ticketNum);
+    if (ticketIndex == -1) {
+        printf("Ticket not found!\n");
+        return;
+    }
+
+    printf("Are you sure? (Y/N): ");
+    if (scanf("%c", &confirm) != 1) {
+        while (getchar() != '\n');
+        printf("Invalid input!\n");
+        return;
+    }
+    while (getchar() != '\n'); // clear buffer
+
+    if (confirm == 'y' || confirm == 'Y') {
+        // Shift remaining records left
+        for (i = ticketIndex; i < totalTicketsCount - 1; i++) {
+            tickets[i] = tickets[i + 1];
+        }
+        totalTicketsCount--;
+        printf("Ticket Cancelled Successfully.\n");
+    } else {
+        printf("Cancellation cancelled.\n");
+    }
 }
 
 /*
  * Saves all tickets and counters from memory to tickets.txt.
  */
 void saveData(void) {
-    // Stub implementation
-    printf("[System] Ticket data saved to %s (Stub).\n", FILENAME);
+    int i;
+    FILE *file = fopen(FILENAME, "w");
+    if (file == NULL) {
+        printf("Unable to save data.\n");
+        return;
+    }
+
+    fprintf(file, "%d\n", totalTicketsCount);
+    for (i = 0; i < totalTicketsCount; i++) {
+        fprintf(file, "%d\n", tickets[i].ticketNumber);
+        fprintf(file, "%s\n", tickets[i].passengerName);
+        fprintf(file, "%d\n", tickets[i].passengerAge);
+        fprintf(file, "%c\n", tickets[i].passengerGender);
+        fprintf(file, "%d\n", tickets[i].trainNumber);
+        fprintf(file, "%s\n", tickets[i].travelDate);
+        fprintf(file, "%d\n", tickets[i].seatNumber);
+        fprintf(file, "%s\n", tickets[i].status);
+    }
+    fclose(file);
+    printf("Data saved successfully.\n");
 }
 
-/*
- * Loads tickets and counters from tickets.txt into memory.
- */
 void loadData(void) {
-    // Stub implementation
-    printf("[System] Ticket data loaded from %s (Stub).\n", FILENAME);
+    int i;
+    char buffer[100];
+    FILE *file = fopen(FILENAME, "r");
+    if (file == NULL) {
+        printf("No saved data found.\n");
+        return;
+    }
+
+    // Read totalTicketsCount
+    if (fgets(buffer, sizeof(buffer), file) == NULL) {
+        totalTicketsCount = 0;
+        fclose(file);
+        return;
+    }
+    totalTicketsCount = atoi(buffer);
+
+    for (i = 0; i < totalTicketsCount; i++) {
+        // Ticket Number
+        if (fgets(buffer, sizeof(buffer), file) == NULL) break;
+        tickets[i].ticketNumber = atoi(buffer);
+
+        // Passenger Name
+        if (fgets(tickets[i].passengerName, sizeof(tickets[i].passengerName), file) == NULL) break;
+        size_t len = strlen(tickets[i].passengerName);
+        if (len > 0 && tickets[i].passengerName[len - 1] == '\n') {
+            tickets[i].passengerName[len - 1] = '\0';
+        }
+
+        // Age
+        if (fgets(buffer, sizeof(buffer), file) == NULL) break;
+        tickets[i].passengerAge = atoi(buffer);
+
+        // Gender
+        if (fgets(buffer, sizeof(buffer), file) == NULL) break;
+        tickets[i].passengerGender = buffer[0];
+
+        // Train Number
+        if (fgets(buffer, sizeof(buffer), file) == NULL) break;
+        tickets[i].trainNumber = atoi(buffer);
+
+        // Travel Date
+        if (fgets(tickets[i].travelDate, sizeof(tickets[i].travelDate), file) == NULL) break;
+        len = strlen(tickets[i].travelDate);
+        if (len > 0 && tickets[i].travelDate[len - 1] == '\n') {
+            tickets[i].travelDate[len - 1] = '\0';
+        }
+
+        // Seat Number
+        if (fgets(buffer, sizeof(buffer), file) == NULL) break;
+        tickets[i].seatNumber = atoi(buffer);
+
+        // Status
+        if (fgets(tickets[i].status, sizeof(tickets[i].status), file) == NULL) break;
+        len = strlen(tickets[i].status);
+        if (len > 0 && tickets[i].status[len - 1] == '\n') {
+            tickets[i].status[len - 1] = '\0';
+        }
+    }
+    fclose(file);
+
+    // Restore nextTicketNumber based on largest ticket number + 1
+    int maxTicketNum = 1000;
+    for (i = 0; i < totalTicketsCount; i++) {
+        if (tickets[i].ticketNumber > maxTicketNum) {
+            maxTicketNum = tickets[i].ticketNumber;
+        }
+    }
+    nextTicketNumber = maxTicketNum + 1;
+
+    printf("Data loaded successfully.\n");
 }
